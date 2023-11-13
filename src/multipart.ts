@@ -18,7 +18,7 @@ export type FileData = yup.InferType<typeof fileDataSchema>
 export async function parseMultipart(
   request: IncomingMessage
 ): Promise<{ [key: string]: string | FileData }> {
-  if (!(request.headers["content-type"] === "multipart/form-data"))
+  if (!request.headers["content-type"]?.startsWith("multipart/form-data"))
     throw new Error("Invalid content type")
   const match = request.headers["content-type"]?.match(/boundary=([^;]+)/i)
   const boundary = match && match[1]
@@ -41,7 +41,7 @@ export async function parseMultipart(
           const splitIdx = part.indexOf("\r\n\r\n")
           if (splitIdx === -1) continue
           const info = part.subarray(0, splitIdx).toString()
-          const body = part.subarray(splitIdx + 4, -2)
+          const body = part.subarray(splitIdx + 4, part.length - 2)
           const nameMatch = /name="([^"]+)"/.exec(info)
           if (!nameMatch) continue
           const name = nameMatch[1]
@@ -56,7 +56,7 @@ export async function parseMultipart(
               mimeType: getMimeTypeFromBuffer(body),
             }
           } else {
-            data[name] = body.toString().slice(0, -2)
+            data[name] = body.toString()
           }
           lastIdx = endIdx
           idx = fullBuffer.indexOf(boundaryBuffer, lastIdx)

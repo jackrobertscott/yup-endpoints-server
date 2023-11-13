@@ -3,11 +3,12 @@ import { InferType, Schema } from "yup"
 import { parseMultipart } from "./multipart"
 
 export type EndpointHandler<I, O> = (
-  request: IncomingMessage & { body: I },
-  response: ServerResponse
+  request: IncomingMessage,
+  response: ServerResponse,
+  body: I
 ) => Promise<O>
 
-export type Endpoint<I extends Schema = any, O extends Schema = any> = {
+export type Endpoint<I extends Schema, O extends Schema> = {
   path: string
   in?: I
   out?: O
@@ -18,7 +19,13 @@ export type Endpoint<I extends Schema = any, O extends Schema = any> = {
   >
 }
 
-export function createYupServer(endpoints: Endpoint[]) {
+export function createEndpoint<I extends Schema, O extends Schema>(
+  data: Endpoint<I, O>
+) {
+  return data
+}
+
+export function createYupEndpointServer(endpoints: Endpoint<any, any>[]) {
   return createServer(async (request, response) => {
     try {
       switch (request.method) {
@@ -29,15 +36,14 @@ export function createYupServer(endpoints: Endpoint[]) {
           const endpoint = slug && endpoints.find((i) => i.path === slug)
           if (endpoint) {
             let body: any
-            if (endpoint.in instanceof Schema) {
+            if (endpoint.in) {
               const formData = await parseMultipart(request)
               body = await endpoint.in.validate(formData, {
                 strict: false, // coerce
                 stripUnknown: true,
               })
             }
-            Object.assign(request, { body })
-            const payload = await endpoint.handler(request as any, response)
+            const payload = await endpoint.handler(request, response, body)
             if (endpoint.hang) break // endpoint will respond manually
             return sendResponse(response, 200, {
               payload,
