@@ -1,3 +1,3 @@
-# zod-server
+# yup-server
 
-A server which uses Zod to validate the incoming data.
+A server which uses Yup to validate the incoming data.
