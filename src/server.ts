@@ -25,7 +25,7 @@ export function createYupEndpoint<I extends Schema, O extends Schema>(
   return data
 }
 
-export function createYupEndpointServer(endpoints: YupEndpoint<any, any>[]) {
+export function createYupServer(endpoints: YupEndpoint<any, any>[]) {
   return createServer(async (request, response) => {
     try {
       switch (request.method) {
