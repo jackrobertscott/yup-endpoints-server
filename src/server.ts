@@ -2,30 +2,30 @@ import { IncomingMessage, ServerResponse, createServer } from "http"
 import { InferType, Schema } from "yup"
 import { parseMultipart } from "./multipart"
 
-export type EndpointHandler<I, O> = (
+export type YupEndpointHandler<I, O> = (
   request: IncomingMessage,
   response: ServerResponse,
   body: I
 ) => Promise<O>
 
-export type Endpoint<I extends Schema, O extends Schema> = {
+export type YupEndpoint<I extends Schema, O extends Schema> = {
   path: string
   in?: I
   out?: O
   hang?: boolean
-  handler: EndpointHandler<
+  handler: YupEndpointHandler<
     I extends Schema ? InferType<I> : unknown,
     O extends Schema ? InferType<O> : unknown
   >
 }
 
-export function createEndpoint<I extends Schema, O extends Schema>(
-  data: Endpoint<I, O>
+export function createYupEndpoint<I extends Schema, O extends Schema>(
+  data: YupEndpoint<I, O>
 ) {
   return data
 }
 
-export function createYupEndpointServer(endpoints: Endpoint<any, any>[]) {
+export function createYupEndpointServer(endpoints: YupEndpoint<any, any>[]) {
   return createServer(async (request, response) => {
     try {
       switch (request.method) {
