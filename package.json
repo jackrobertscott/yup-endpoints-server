@@ -1,5 +1,5 @@
 {
-  "name": "yup-server",
+  "name": "yup-endpoints-server",
   "description": "A server which uses Yup to validate the incoming data.",
   "author": "Jack Scott",
   "version": "0.1.0",
@@ -13,7 +13,7 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/jackrobertscott/yup-server.git"
+    "url": "https://github.com/jackrobertscott/yup-endpoints-server.git"
   },
   "scripts": {
     "build": "tsc",
