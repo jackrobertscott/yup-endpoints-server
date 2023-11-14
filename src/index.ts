@@ -1,7 +1,7 @@
 export * from "yup-endpoints"
 
 import { IncomingMessage, Server, ServerResponse, createServer } from "http"
-import { Schema } from "yup"
+import { InferType, Schema } from "yup"
 import { YupEndpoint } from "yup-endpoints"
 import { parseMultipart } from "./multipart"
 
@@ -26,7 +26,7 @@ export type YupEndpointHandler<I extends Schema, O extends Schema> = {
   handler: (
     request: IncomingMessage,
     response: ServerResponse,
-    body: I
+    body: InferType<I>
   ) => Promise<O>
 }
 
@@ -39,12 +39,8 @@ export type YupEndpointHandler<I extends Schema, O extends Schema> = {
  * @returns An object containing the endpoint configuration and handler.
  */
 export function createYupEndpointHandler<I extends Schema, O extends Schema>(
-  endpoint: YupEndpoint<I, O>,
-  handler: (
-    request: IncomingMessage,
-    response: ServerResponse,
-    body: I
-  ) => Promise<O>
+  endpoint: YupEndpointHandler<I, O>["endpoint"],
+  handler: YupEndpointHandler<I, O>["handler"]
 ): YupEndpointHandler<I, O> {
   return {
     endpoint,
