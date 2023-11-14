@@ -2,8 +2,6 @@ import { ServerResponse } from "http"
 import { YupEndpoint } from "yup-endpoints"
 import { createYupServer, sendJsonResponse } from "."
 
-jest.mock("http")
-
 describe("createYupServer", () => {
   it("should create a server", () => {
     const mockEndpoints: YupEndpoint<any, any>[] = [
