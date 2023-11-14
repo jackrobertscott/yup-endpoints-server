@@ -1,16 +1,5 @@
 import { IncomingMessage } from "http"
-import * as yup from "yup"
-
-export const fileDataSchema = yup.object().shape({
-  body: yup
-    .mixed((input): input is Buffer => input instanceof Buffer)
-    .required(),
-  fileName: yup.string().required(),
-  encoding: yup.string().required(),
-  mimeType: yup.string().required(),
-})
-
-export type FileData = yup.InferType<typeof fileDataSchema>
+import { FileData } from "yup-endpoints"
 
 /**
  * Extract file contents from request.
