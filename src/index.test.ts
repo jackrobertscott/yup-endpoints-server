@@ -1,10 +1,9 @@
 import { ServerResponse } from "http"
-import { YupEndpoint } from "yup-endpoints"
-import { createYupServer, sendJsonResponse } from "."
+import { YupEndpointHandler, createYupServer, sendJsonResponse } from "."
 
 describe("createYupServer", () => {
   it("should create a server", () => {
-    const mockEndpoints: YupEndpoint<any, any>[] = [
+    const mockEndpoints: YupEndpointHandler<any, any>[] = [
       // Mock endpoint configurations
     ]
     const server = createYupServer(mockEndpoints)

@@ -31,27 +31,30 @@ import { createYupServer, fileDataSchema } from 'yup-endpoints-server';
 import * as yup from 'yup';
 
 // Define an endpoint
-const endpoints = [
-  createYupEndpoint({
-    path: '/create-user',
-    in: yup.object().shape({
-      name: yup.string().required(),
-      email: yup.string().required(),
-      avatar: fileDataSchema, // form-data file
-    }),
-    out: yup.object().shape({
-      success: yup.boolean().required(),
-    }),
-    handler: async (req, res, body) => {
-      console.log(body.avatar.fileName) 
-      // create user logic
-      return { success: true };
-    }
-  })
-];
+const createUserEndpoint = createYupEndpoint({
+  path: '/create-user',
+  in: yup.object().shape({
+    name: yup.string().required(),
+    email: yup.string().required(),
+    avatar: fileDataSchema, // form-data file
+  }),
+  out: yup.object().shape({
+    success: yup.boolean().required(),
+  }),
+});
+
+// Apply the endpoint handler logic
+const createUserHandler = createYupEndpointHandler(
+  createUserEndpoint,
+  async (req, res, body) => {
+    console.log(body.avatar.fileName) 
+    // create user logic
+    return { success: true };
+  }
+)
 
 // Create and start the server
-const server = createYupServer(endpoints);
+const server = createYupServer([createUserHandler]);
 server.listen(3000, () => {
   console.log('Server running on http://localhost:3000');
 });
@@ -61,13 +64,13 @@ server.listen(3000, () => {
 
 - `createYupEndpoint<I extends yup.Schema, O extends yup.Schema>(data: YupEndpoint<I, O>)`: Function to create a Yup endpoint with specified input and output validation schemas.
 
-- `createYupServer(endpoints: YupEndpoint<any, any>[])`: Creates a new HTTP server with specified endpoints using Yup validation schemas.
+- `createYupServer(endpoints: YupEndpointHandler<any, any>[])`: Creates a new HTTP server with specified endpoints using Yup validation schemas.
 
 - `fileDataSchema`: A Yup schema for validating file data, including buffer, filename, encoding, and MIME type.
 
-- `YupEndpointHandler<I, O>`: Type for an endpoint handler function, where `I` is the input type validated by a Yup schema and `O` is the output type.
+- `YupEndpoint<I extends yup.Schema, O extends yup.Schema>`: Type definition for an endpoint, including path, input and output schemas.
 
-- `YupEndpoint<I extends yup.Schema, O extends yup.Schema>`: Type definition for an endpoint, including path, input and output schemas, and a handler function.
+- `YupEndpointHandler<I extends yup.Schema, O extends yup.Schema>`: Type for an endpoint handler, where `I` is the input type validated by a Yup schema and `O` is the output type.
 
 - `sendJsonResponse(response: ServerResponse, statusCode: number, jsonBody?: object)`: Utility function to send a JSON response with a specified status code and body.
 
