@@ -2,7 +2,7 @@
   "name": "yup-endpoints-server",
   "description": "A server which uses Yup to validate the incoming data.",
   "author": "Jack Scott",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
