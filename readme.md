@@ -59,8 +59,6 @@ server.listen(3000, () => {
 
 ## API Documentation
 
-## API Documentation
-
 - `createYupEndpoint<I extends yup.Schema, O extends yup.Schema>(data: YupEndpoint<I, O>)`: Function to create a Yup endpoint with specified input and output validation schemas.
 
 - `createYupServer(endpoints: YupEndpoint<any, any>[])`: Creates a new HTTP server with specified endpoints using Yup validation schemas.
