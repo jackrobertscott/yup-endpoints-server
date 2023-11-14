@@ -59,7 +59,8 @@ export function createYupServer(
 ): Server {
   return createServer(async (request, response) => {
     try {
-      switch (request.method) {
+      const method = request.method?.toUpperCase()
+      switch (method) {
         case "OPTIONS":
           return sendJsonResponse(response, 204)
         case "POST":
@@ -116,4 +117,5 @@ export function sendJsonResponse(
     "Access-Control-Allow-Headers": "Content-Type",
   })
   if (jsonBody) response.end(JSON.stringify(jsonBody))
+  else response.end()
 }
