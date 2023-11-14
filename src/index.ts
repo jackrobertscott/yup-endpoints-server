@@ -40,8 +40,12 @@ export type YupEndpointHandler<I extends Schema, O extends Schema> = {
  */
 export function createYupEndpointHandler<I extends Schema, O extends Schema>(
   endpoint: YupEndpoint<I, O>,
-  handler: YupEndpointHandler<I, O>
-) {
+  handler: (
+    request: IncomingMessage,
+    response: ServerResponse,
+    body: I
+  ) => Promise<O>
+): YupEndpointHandler<I, O> {
   return {
     endpoint,
     handler,
