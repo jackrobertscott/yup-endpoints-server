@@ -13,13 +13,13 @@ A lightweight, efficient server framework for Node.js, designed to simplify the 
 ## Installation
 
 ```bash
-npm install yup-endpoints-server
+npm install yup yup-endpoints-server
 ```
 
 Or, if you prefer using Yarn:
 
 ```bash
-yarn add yup-endpoints-server
+yarn add yup yup-endpoints-server
 ```
 
 ## Usage
