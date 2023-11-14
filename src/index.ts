@@ -26,8 +26,8 @@ export type YupEndpointHandler<I extends Schema, O extends Schema> = {
   handler: (
     request: IncomingMessage,
     response: ServerResponse,
-    body: InferType<I>
-  ) => Promise<InferType<O>>
+    body: I extends Schema ? InferType<I> : unknown
+  ) => Promise<O extends Schema ? InferType<O> : unknown>
 }
 
 /**
