@@ -3,7 +3,7 @@ export * from "yup-endpoints"
 import { IncomingMessage, Server, ServerResponse, createServer } from "http"
 import { InferType, Schema } from "yup"
 import { YupEndpoint } from "yup-endpoints"
-import { parseMultipart } from "./multipart"
+import { parseJson, parseMultipart } from "./multipart"
 
 /**
  * Represents an endpoint handler with input validation and output schema.
@@ -70,8 +70,11 @@ export function createYupServer(
             return sendJsonResponse(response, 404, { error: "Not found" })
           let body: any
           if (current.endpoint.in) {
-            const formData = await parseMultipart(request)
-            body = await current.endpoint.in.validate(formData, {
+            const contentType = request.headers["content-type"]
+            const rawData = contentType?.startsWith("application/json")
+              ? await parseJson(request)
+              : await parseMultipart(request)
+            body = await current.endpoint.in.validate(rawData, {
               strict: false, // coerce
               stripUnknown: true,
             })

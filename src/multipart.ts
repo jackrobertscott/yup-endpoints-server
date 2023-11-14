@@ -2,6 +2,25 @@ import { IncomingMessage } from "http"
 import { FileData } from "yup-endpoints"
 
 /**
+ * Asynchronously parses incoming JSON data from a request.
+ */
+export async function parseJson(request: IncomingMessage): Promise<any> {
+  if (!request.headers["content-type"]?.startsWith("application/json"))
+    throw new Error("Invalid content type")
+  let data = ""
+  return new Promise((resolve, reject) => {
+    request.on("data", (chunk) => (data += chunk))
+    request.on("end", () => {
+      try {
+        resolve(JSON.parse(data))
+      } catch {
+        reject(new Error("Invalid JSON"))
+      }
+    })
+  })
+}
+
+/**
  * Extract file contents from request.
  */
 export async function parseMultipart(
